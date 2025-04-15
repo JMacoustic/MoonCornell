@@ -6,17 +6,19 @@ from pyglet.gl import *
 from pyglet.math import Mat4, Vec3, Quaternion
 import math
 
-aspectRatio = 2.0
+aspectRatio = 16/9
+fov = 77
 nearPlane   = 0.1
-farPlane    = 10000.0
+farPlane    = 255
   
 beginu, beginv   = 0, 0
 height, width    = 0, 0
 
-curquat    = [1, 0, 0, 0]
+init_quat = [1,0,0,0]
+curquat    = init_quat
 lastquat   = [1,0,0,0]
-tx, ty, tz = 0.0, -12.0, 0.0
-dolly      = 35.0
+tx, ty, tz = 0, -11, -31
+dolly      = 0
 
 TRACKBALLSIZE = 0.6
 
@@ -28,7 +30,7 @@ def resize( window, w, h ):
     aspectRatio = float(width)/float(height)
     
     window.viewport = ( 0, 0, width, height )
-    window.projection = Mat4.perspective_projection(aspectRatio, z_near=0.1, z_far=255)
+    window.projection = Mat4.perspective_projection(aspectRatio, z_near=nearPlane, z_far=farPlane, fov=fov)
 
 
 def move( dx, dy, dz ):

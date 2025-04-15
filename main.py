@@ -6,8 +6,8 @@ from scripts import camera
 from scripts.cornell import CornellScene
 from pyglet.gl import *
 
-width  = 900
-height = 1600
+width  = 810
+height = 1440
 
 window = pyglet.window.Window(width, height, resizable=True, caption="Moon Cornell Box")
 program = pyglet.graphics.get_default_shader()
@@ -26,6 +26,9 @@ def on_draw():
 
 @window.event
 def on_key_press( key, mods ):	
+	if key==pyglet.window.key._1:
+		camera.curquat=camera.init_quat
+
 	if key==pyglet.window.key.Q:
 		pyglet.app.exit()
 	
@@ -74,7 +77,7 @@ def update(dt):
 moonCornell = CornellScene(cornellBatch)
 
 pyglet.clock.schedule_interval(update, 1/60)
-glClearColor(0.0, 0.1, 0.3, 1.0)
+glClearColor(0.0, 0.0, 0.0, 1.0)
 glEnable(GL_DEPTH_TEST)
 glClearDepth(1.0)
 glDepthFunc(GL_LESS)

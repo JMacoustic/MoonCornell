@@ -1,5 +1,5 @@
 # Moon's Cornell Box
-![Demo GIF](report/demo_gif.gif)
+![Demo Image](report/demo_image2.png)
 
 This is a modified version of a cornell box setup implemented using pyglet. Cornell box is a famous test task in computer graphics field, where you try to render photo-realistic image that mimics a highly-controlled real-world scene([example](https://en.wikipedia.org/wiki/Cornell_box)). 
 
@@ -38,12 +38,8 @@ Now, simply activate conda environment and run the code.
 
 ## How to play
 
-1. Keyboard controls. You can press multiple buttons together. Some will work, some won't. Test it out!
-    - key 1: start moving. sorry but you cannot change direction
-    - key 2: stop moving.
-    - key 3: raise head.
-    - key 4: attack!! you cannot attack if the head is not raised yet.
-    - key 5: lower head.
+1. Keyboard controls.
+    - key 1: Return to initial view point
 
 2. Mouse controls.
     - Grab-and-Drag: change the view by trackball viewer. It should be intuitive.
