@@ -4,24 +4,21 @@
 
 from pyglet.gl import *
 from pyglet.math import Mat4, Vec3, Quaternion
-
 import math
 
-aspectRatio = 1.0
+aspectRatio = 2.0
 nearPlane   = 0.1
 farPlane    = 10000.0
   
 beginu, beginv   = 0, 0
 height, width    = 0, 0
 
-
 curquat    = [1, 0, 0, 0]
 lastquat   = [1,0,0,0]
-tx, ty, tz = 0.0, 0.0, 0.0
+tx, ty, tz = 0.0, -12.0, 0.0
 dolly      = 35.0
 
 TRACKBALLSIZE = 0.6
-
 
 def resize( window, w, h ):
     global height, width, aspectRatio
