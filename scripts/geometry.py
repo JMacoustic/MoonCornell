@@ -4,15 +4,17 @@ import pyglet
 from pyglet import model
 from math import pi, sin, cos
 from pyglet.math import Mat4
+from pyglet.gl import *
 
 class Cube(model.Model):
 
-    def __init__(self, width=1.0, height=1.0, depth=1.0, color=(1.0, 1.0, 1.0, 1.0),
+    def __init__(self, width=1.0, height=1.0, depth=1.0, color=(1.0, 1.0, 1.0, 1.0), specular = 0.5,
                  material=None, batch=None, group=None, program=None):
         self._width = width
         self._height = height
         self._depth = depth
         self._color = color
+        self._specular = specular
         self.deformation = Mat4()
         self.movement = Mat4()
 
@@ -77,12 +79,16 @@ class Cube(model.Model):
                    11, 10, 8, 10, 9, 8,     # right
                    7, 6, 4, 6, 5, 4,        # back
                    3, 2, 0, 2, 1, 0]        # front
+        
+        return self._program.vertex_list_indexed(
+                len(vertices) // 3, GL_TRIANGLES, indices,
+                batch=self._batch, group=self._group,
+                position=('f', vertices), normal=('f', normals),
+                color=('f', self._color * (len(vertices) // 3)),
+                specular=('f', [self._specular] * (len(vertices) // 3))
+            )
+        
 
-        return self._program.vertex_list_indexed(len(vertices) // 3, pyglet.gl.GL_TRIANGLES, indices,
-                                                 batch=self._batch, group=self._group,
-                                                 POSITION=('f', vertices),
-                                                 NORMAL=('f', normals),
-                                                 COLOR_0=('f', self._color * (len(vertices) // 3)))
     def deform(self, deformMat):
         self.deformation = deformMat @ self.deformation
         self.matrix = self.movement @ self.deformation
@@ -93,12 +99,13 @@ class Cube(model.Model):
 
 
 class Box(model.Model):
-    def __init__(self, width=1.0, height=1.0, depth=1.0, color=(1.0, 1.0, 1.0, 1.0),
+    def __init__(self, width=1.0, height=1.0, depth=1.0, color=(1.0, 1.0, 1.0, 1.0), specular = 0.5,
                  material=None, batch=None, group=None, program=None):
         self._width = width
         self._height = height
         self._depth = depth
         self._color = color
+        self._specular = specular
         self.deformation = Mat4()
         self.movement = Mat4()
 
@@ -217,11 +224,13 @@ class Box(model.Model):
             20, 21, 22,  20, 22, 23
         ]
 
-        return self._program.vertex_list_indexed(len(vertices) // 3, pyglet.gl.GL_TRIANGLES, indices,
-                                                 batch=self._batch, group=self._group,
-                                                 POSITION=('f', vertices),
-                                                 NORMAL=('f', normals),
-                                                 COLOR_0=('f', self._color * (len(vertices) // 3)))
+        return self._program.vertex_list_indexed(
+                len(vertices) // 3, GL_TRIANGLES, indices,
+                batch=self._batch, group=self._group,
+                position=('f', vertices), normal=('f', normals),
+                color=('f', self._color * (len(vertices) // 3)),
+                specular=('f', [self._specular] * (len(vertices) // 3))
+            )
 
     def deform(self, deformMat):
         self.deformation = deformMat @ self.deformation
@@ -233,12 +242,13 @@ class Box(model.Model):
 
 class Sphere(model.Model):
 
-    def __init__(self, radius=1.0, stacks=30, sectors=30, color=(1.0, 1.0, 1.0, 1.0),
+    def __init__(self, radius=1.0, stacks=30, sectors=30, color=(1.0, 1.0, 1.0, 1.0), specular = 0.5,
                  material=None, batch=None, group=None, program=None):
         self._radius = radius
         self._stacks = stacks
         self._sectors = sectors
         self._color = color
+        self._specular = specular
         self.deformation = Mat4()
         self.movement = Mat4()
 
@@ -284,11 +294,14 @@ class Sphere(model.Model):
                 indices.extend([first, second, second + 1])
                 indices.extend([first, second + 1, first + 1])
 
-        return self._program.vertex_list_indexed(len(vertices) // 3, pyglet.gl.GL_TRIANGLES, indices,
-                                                 batch=self._batch, group=self._group,
-                                                 POSITION=('f', vertices),
-                                                 NORMAL=('f', normals),
-                                                 COLOR_0=('f', self._color * (len(vertices) // 3)))
+        return self._program.vertex_list_indexed(
+                len(vertices) // 3, GL_TRIANGLES, indices,
+                batch=self._batch, group=self._group,
+                position=('f', vertices), normal=('f', normals),
+                color=('f', self._color * (len(vertices) // 3)),
+                specular=('f', [self._specular] * (len(vertices) // 3))
+            )
+    
     def deform(self, deformMat):
         self.deformation = deformMat @ self.deformation
         self.matrix = self.movement @ self.deformation
@@ -300,12 +313,13 @@ class Sphere(model.Model):
 
 class Cylinder(model.Model):
 
-    def __init__(self, radius=1.0, height=2.0, sectors=30, color=(1.0, 1.0, 1.0, 1.0),
+    def __init__(self, radius=1.0, height=2.0, sectors=30, color=(1.0, 1.0, 1.0, 1.0), specular = 0.5,
                  material=None, batch=None, group=None, program=None):
         self._radius = radius
         self._height = height
         self._sectors = sectors
         self._color = color
+        self._specular = specular
         self.deformation = Mat4()
         self.movement = Mat4()
 
@@ -364,11 +378,13 @@ class Cylinder(model.Model):
             indices.extend([first, second, first + 1])
             indices.extend([second, second + 1, first + 1])
 
-        return self._program.vertex_list_indexed(len(vertices) // 3, pyglet.gl.GL_TRIANGLES, indices,
-                                                 batch=self._batch, group=self._group,
-                                                 POSITION=('f', vertices),
-                                                 NORMAL=('f', normals),
-                                                 COLOR_0=('f', self._color * (len(vertices) // 3)))
+        return self._program.vertex_list_indexed(
+                len(vertices) // 3, GL_TRIANGLES, indices,
+                batch=self._batch, group=self._group,
+                position=('f', vertices), normal=('f', normals),
+                color=('f', self._color * (len(vertices) // 3)),
+                specular=('f', [self._specular] * (len(vertices) // 3))
+            )
     
     def deform(self, deformMat):
         self.deformation = deformMat @ self.deformation

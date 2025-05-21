@@ -5,13 +5,19 @@ import pyglet
 from scripts import camera
 from scripts.cornell import CornellScene
 from pyglet.gl import *
+from customshader import customShader
+from pyglet.math import Vec3, Vec4, Mat4
+from scripts import geometry
 
 width  = 810
 height = 1440
 
 window = pyglet.window.Window(width, height, resizable=True, caption="Moon Cornell Box")
-program = pyglet.graphics.get_default_shader()
 cornellBatch = pyglet.graphics.Batch()
+shader = customShader(batch=cornellBatch)
+customprogram = shader.program
+basicprogram = pyglet.graphics.get_default_shader()
+
 
 @window.event
 def on_resize(width, height):
@@ -22,6 +28,14 @@ def on_resize(width, height):
 def on_draw():
 	window.clear()
 	camera.apply(window)
+	customprogram.use()
+	customprogram['lightPos'] = Vec3(0, 16.8, 0.0)
+	customprogram['lightColor'] = Vec3(1.0, 1.0, 1.0)
+	customprogram['projection'] = window.projection
+
+	identity = Mat4()
+	customprogram['model'] = identity
+
 	cornellBatch.draw()
 
 @window.event
@@ -31,6 +45,12 @@ def on_key_press( key, mods ):
 
 	if key==pyglet.window.key.Q:
 		pyglet.app.exit()
+	
+	if key==pyglet.window.key.UP:
+		camera.ty -= 1
+	
+	if key==pyglet.window.key.DOWN:
+		camera.ty += 1
 	
 @window.event
 def on_mouse_release( x, y, button, mods ):
@@ -72,9 +92,14 @@ def on_mouse_scroll(x, y, scroll_x, scroll_y):
 
 
 def update(dt):
-	pass
+	customprogram['viewPos'] = camera.get_camera_position()
+	customprogram['view'] = window.view
 
-moonCornell = CornellScene(cornellBatch)
+
+moonCornell = CornellScene(cornellBatch, program=customprogram)
+
+# vlist = customprogram.vertex_list_indexed(24, GL_TRIANGLES, moonCornell.cube.indices, cornellBatch, None,
+#     position=('f', moonCornell.cube.vertices), normal=('f', moonCornell.cube.normals))
 
 pyglet.clock.schedule_interval(update, 1/60)
 glClearColor(0.0, 0.0, 0.0, 1.0)

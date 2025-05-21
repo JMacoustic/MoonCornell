@@ -3,7 +3,7 @@
 
 
 from pyglet.gl import *
-from pyglet.math import Mat4, Vec3, Quaternion
+from pyglet.math import Mat4, Vec3, Vec4, Quaternion
 import math
 
 aspectRatio = 16/9
@@ -125,3 +125,13 @@ def multiply( q1, q2 ):
     d[3] /= l
     return d
 
+def get_camera_position():
+    q = Quaternion(curquat[0], curquat[1], curquat[2], curquat[3])
+    view_matrix = (
+        Mat4.from_translation(Vec3(tx, ty, tz)) @
+        Mat4.from_translation(Vec3(0.0, 0.0, -dolly)) @
+        Quaternion.to_mat4(q)
+    )
+    inv_view = view_matrix.__invert__()
+    cam_pos = inv_view @ Vec4(0, 0, 0, 1)
+    return [cam_pos[0], cam_pos[1], cam_pos[2]]
